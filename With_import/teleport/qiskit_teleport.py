@@ -1,0 +1,15 @@
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
+qr = QuantumRegister(3)
+cr = ClassicalRegister(2)
+qc = QuantumCircuit(qr, cr)
+qc.h(qr[1])
+qc.cx(qr[1], qr[2])
+qc.h(qr[0])
+qc.cx(qr[0], qr[1])
+qc.h(qr[0])
+qc.measure(qr[0], cr[0])
+qc.measure(qr[1], cr[1])
+with qc.if_test((cr[1], 1)):
+    qc.x(qr[2])
+with qc.if_test((cr[0], 1)):
+    qc.z(qr[2])

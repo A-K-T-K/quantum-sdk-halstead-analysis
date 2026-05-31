@@ -1,0 +1,41 @@
+{
+  "operators": [
+
+    "@",
+
+    "for",
+    "in",
+    "if",
+    "return",
+
+    "Adjoint",
+    "Controlled",
+    "use",
+    "let",
+    "Measure",
+    "MResetZ",
+    "MResetX",
+    "Reset",
+    "within",
+    "apply",
+
+    "+",
+    "-",
+    "*",
+    "/",
+    "=",
+    "==",
+    "!=",
+    "<=",
+    ">=",
+
+    "(",
+    ")",
+    ",",
+    "[",
+    "]",
+    "{",
+    "}",
+    ";"
+  ]
+}

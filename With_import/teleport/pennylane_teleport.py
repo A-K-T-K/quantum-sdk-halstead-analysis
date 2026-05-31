@@ -1,0 +1,14 @@
+import pennylane as qml
+dev = qml.device("default.qubit", wires=3)
+@qml.qnode(dev)
+def teleportation():
+    qml.Hadamard(wires=1)
+    qml.CNOT(wires=[1, 2])  
+    qml.Hadamard(wires=0)
+    qml.CNOT(wires=[0, 1])
+    qml.Hadamard(wires=0)
+    m0 = qml.measure(0)
+    m1 = qml.measure(1)
+    qml.cond(m1, qml.PauliX)(2)
+    qml.cond(m0, qml.PauliZ)(2)
+    return qml.state()

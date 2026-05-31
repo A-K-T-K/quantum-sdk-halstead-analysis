@@ -1,0 +1,10 @@
+import cirq
+import sympy
+theta = sympy.Symbol('theta')
+q = cirq.LineQubit.range(3)
+circuit = cirq.Circuit()
+circuit.append(cirq.ry(theta)(q[0]))
+circuit.append(cirq.ry(theta)(q[1]))
+circuit.append(cirq.ry(theta)(q[2]))
+circuit.append(cirq.CNOT(q[0], q[1]))
+circuit.append(cirq.CNOT(q[1], q[2]))

@@ -1,0 +1,19 @@
+Metric,Comparison,Test,Effect Size (r / d),Raw p,BH-corrected p,Significant (BH α=0.05)
+effort,Cirq vs PennyLane,Wilcoxon,0.4265,0.14386,0.28772,False
+effort,Cirq vs Q#,Wilcoxon,0.0735,0.820892,0.820892,False
+effort,Cirq vs Qiskit,Wilcoxon,0.0882,0.781952,0.820892,False
+effort,PennyLane vs Q#,Wilcoxon,0.7647,0.005157,0.030945,True
+effort,PennyLane vs Qiskit,Wilcoxon,0.2941,0.32251,0.483765,False
+effort,Qiskit vs Q#,Wilcoxon,0.5294,0.065399,0.196198,False
+volume,Cirq vs PennyLane,Wilcoxon,1.0,3.1e-05,9.2e-05,True
+volume,Cirq vs Q#,Wilcoxon,0.6471,0.021393,0.032089,True
+volume,Cirq vs Qiskit,Wilcoxon,0.5588,0.050659,0.060791,False
+volume,PennyLane vs Q#,Wilcoxon,1.0,3.1e-05,9.2e-05,True
+volume,PennyLane vs Qiskit,Wilcoxon,0.4412,0.12973,0.12973,False
+volume,Qiskit vs Q#,Wilcoxon,0.9412,0.000214,0.000427,True
+difficulty,Cirq vs PennyLane,Wilcoxon,0.0735,0.820892,0.820892,False
+difficulty,Cirq vs Q#,Wilcoxon,0.1324,0.668549,0.802258,False
+difficulty,Cirq vs Qiskit,Wilcoxon,0.3529,0.224229,0.595703,False
+difficulty,PennyLane vs Q#,Wilcoxon,0.3088,0.297852,0.595703,False
+difficulty,PennyLane vs Qiskit,Wilcoxon,0.1912,0.528168,0.792252,False
+difficulty,Qiskit vs Q#,Wilcoxon,0.5294,0.065399,0.392395,False
