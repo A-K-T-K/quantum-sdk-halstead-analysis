@@ -10,9 +10,6 @@ operation DeutschJozsa() : (Result, Result) {
     H(q[1]);
     let r0 = M(q[0]);
     let r1 = M(q[1]);
-    if (r0 == One) { X(q[0]); }
-    if (r1 == One) { X(q[1]); }
-    let r2 = M(q[2]);
-    if (r2 == One) { X(q[2]); }
+    ResetAll(q);
     return (r0, r1);
 }

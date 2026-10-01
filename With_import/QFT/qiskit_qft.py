@@ -1,7 +1,8 @@
-from qiskit import QuantumCircuit, QuantumRegister
+from qiskit import QuantumCircuit, QuantumRegister, ClassicalRegister
 import numpy as np
 qr = QuantumRegister(3)
-qc = QuantumCircuit(qr)
+cr = ClassicalRegister(3)
+qc = QuantumCircuit(qr, cr)
 qc.h(qr[0])
 qc.cp(np.pi/2, qr[1], qr[0])
 qc.cp(np.pi/4, qr[2], qr[0])
@@ -9,3 +10,6 @@ qc.h(qr[1])
 qc.cp(np.pi/2, qr[2], qr[1])
 qc.h(qr[2])
 qc.swap(qr[0], qr[2])
+qc.measure(qr[0], cr[0])
+qc.measure(qr[1], cr[1])
+qc.measure(qr[2], cr[2])

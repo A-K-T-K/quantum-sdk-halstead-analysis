@@ -9,4 +9,4 @@ def circuit():
     qml.CNOT(wires=[1, 2])
     qml.Hadamard(wires=0)
     qml.Hadamard(wires=1)
-    return qml.sample(wires=[0, 1])
+    return qml.probs(wires=[0, 1])

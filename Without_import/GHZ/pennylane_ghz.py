@@ -4,8 +4,4 @@ def circuit():
     qml.Hadamard(wires=0)
     qml.CNOT(wires=[0, 1])
     qml.CNOT(wires=[1, 2])
-    return (
-        qml.measure(wires=0),
-        qml.measure(wires=1),
-        qml.measure(wires=2)
-    )
+    return qml.probs(wires=[0, 1, 2])

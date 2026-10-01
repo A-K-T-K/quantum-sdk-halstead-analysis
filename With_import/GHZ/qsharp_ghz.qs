@@ -10,7 +10,8 @@ namespace GHZResearch {
         CNOT(q[1], q[2]);       
         let m0 = M(q[0]);
         let m1 = M(q[1]);
-        let m2 = M(q[2]);        
+        let m2 = M(q[2]);
+        ResetAll(q);
         return (m0, m1, m2);
     }
 }

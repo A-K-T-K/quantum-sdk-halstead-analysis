@@ -1,0 +1,33 @@
+benchmark,sdk,file,width,notes,branches,measured,fidelity,leaked,status,seconds
+bell,cirq,With_import/bell/cirq_bell.py,2,,1,0 1,1.0000000000000004,-4.440892098500626e-16,pass,1.71
+bell,pennylane,With_import/bell/pennylane_bell.py,2,,1,0 1,0.9999999999999996,2.220446049250313e-16,pass,1.04
+bell,qiskit,With_import/bell/qiskit_bell.py,2,,1,0 1,0.9999999999999996,2.220446049250313e-16,pass,0.4
+bell,qsharp,With_import/bell/qsharp_bell.qs,2,,1,0 1,0.9999999999999996,2.220446049250313e-16,pass,0.58
+GHZ,cirq,With_import/GHZ/cirq_ghz.py,3,,1,0 1 2,1.0000000000000004,-4.440892098500626e-16,pass,0.0
+GHZ,pennylane,With_import/GHZ/pennylane_ghz.py,3,,1,0 1 2,0.9999999999999996,2.220446049250313e-16,pass,0.0
+GHZ,qiskit,With_import/GHZ/qiskit_ghz.py,3,,1,0 1 2,0.9999999999999996,2.220446049250313e-16,pass,0.0
+GHZ,qsharp,With_import/GHZ/qsharp_ghz.qs,3,,1,0 1 2,0.9999999999999996,2.220446049250313e-16,pass,0.26
+DJ,cirq,With_import/DJ/cirq_dj.py,3,,1,0 1,1.0000000000000022,-2.4424906541753444e-15,pass,0.0
+DJ,pennylane,With_import/DJ/pennylane_dj.py,3,,1,0 1,0.9999999999999991,7.771561172376096e-16,pass,0.0
+DJ,qiskit,With_import/DJ/qiskit_dj.py,3,,1,0 1,0.9999999999999991,7.771561172376096e-16,pass,0.0
+DJ,qsharp,With_import/DJ/qsharp_dj.qs,3,,1,0 1,0.9999999999999991,7.771561172376096e-16,pass,0.25
+P_ansatz,cirq,With_import/P_ansatz/cirq_ansatz.py,3,,1,0 1 2,0.9999999999999991,4.440892098500626e-16,pass,0.0
+P_ansatz,pennylane,With_import/P_ansatz/pennylane_ansatz.py,3,,1,0 1 2,0.9999999999999991,4.440892098500626e-16,pass,0.0
+P_ansatz,qiskit,With_import/P_ansatz/qiskit_ansatz.py,3,,1,0 1 2,0.9999999999999991,4.440892098500626e-16,pass,0.0
+P_ansatz,qsharp,With_import/P_ansatz/qsharp_ansatz.qs,3,,1,0 1 2,0.9999999999999991,4.440892098500626e-16,pass,0.26
+QFT,cirq,With_import/QFT/cirq_qft.py,3,,1,0 1 2,1.0000000000000013,-1.3322676295501878e-15,pass,0.0
+QFT,pennylane,With_import/QFT/pennylane_qft.py,3,,1,0 1 2,0.9999999999999996,4.440892098500626e-16,pass,0.0
+QFT,qiskit,With_import/QFT/qiskit_qft.py,3,,1,0 1 2,0.9999999999999996,4.440892098500626e-16,pass,0.0
+QFT,qsharp,With_import/QFT/qsharp_qft.qs,3,,1,0 1 2,0.9999999999999993,9.992007221626409e-16,pass,0.26
+qaoa,cirq,With_import/qaoa/cirq_qaoa.py,3,,1,0 1 2,1.0000000000000013,-1.1102230246251565e-15,pass,0.0
+qaoa,pennylane,With_import/qaoa/pennylane_qaoa.py,3,,1,0 1 2,0.9999999999999996,6.661338147750939e-16,pass,0.0
+qaoa,qiskit,With_import/qaoa/qiskit_qaoa.py,3,,1,0 1 2,0.9999999999999996,6.661338147750939e-16,pass,0.0
+qaoa,qsharp,With_import/qaoa/qsharp_qaoa.qs,3,,1,0 1 2,0.9999999999999996,6.661338147750939e-16,pass,0.26
+teleport,cirq,With_import/teleport/cirq_teleport.py,3,,4,0 1 2,0.9999999999999996,3.3306690738754696e-16,pass,0.0
+teleport,pennylane,With_import/teleport/pennylane_teleport.py,3,,4,0 1 2,0.9999999999999998,1.1102230246251565e-16,pass,0.0
+teleport,qiskit,With_import/teleport/qiskit_teleport.py,3,,4,0 1 2,1.0,0.0,pass,0.0
+teleport,qsharp,With_import/teleport/qsharp_teleport.qs,3,,4,0 1 2,0.9999999999999998,1.1102230246251565e-16,pass,0.26
+Grover,cirq,With_import/Grover/cirq_grover.py,3,,1,0 1 2,1.000000000000004,-3.9968028886505635e-15,pass,0.0
+Grover,pennylane,With_import/Grover/pennylane_grover.py,3,,1,0 1 2,0.9999999999999984,1.3322676295501878e-15,pass,0.0
+Grover,qiskit,With_import/Grover/qiskit_grover.py,3,,1,0 1 2,0.9999999999999984,1.3322676295501878e-15,pass,0.0
+Grover,qsharp,With_import/Grover/qsharp_grover.qs,3,,1,0 1 2,0.9999999999999978,2.220446049250313e-15,pass,0.27

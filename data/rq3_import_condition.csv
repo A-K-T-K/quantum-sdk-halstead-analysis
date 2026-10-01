@@ -1,4 +1,4 @@
 Metric,W,p-value,r (RBC),Mean Δ%,Direction,Significant
-Effort,166.0,0.0683,0.3712,-8.84%,Without Import > With Import,No
-Volume,0.0,0.0,1.0,+13.78%,With Import > Without Import,Yes
-Difficulty,10.0,0.0,0.9621,-18.26%,Without Import > With Import,Yes
+Effort,120.0,0.006084855645895004,0.5455,-10.73%,Without Import > With Import,Yes
+Volume,0.0,4.656612873077393e-10,1.0,+12.34%,With Import > Without Import,Yes
+Difficulty,3.0,2.3283064365386963e-09,0.9886,-19.70%,Without Import > With Import,Yes

@@ -1,12 +1,18 @@
-operation RunAnsatz() : Unit {
-    Ansatz(0.785);
-}
-operation Ansatz(theta : Double) : Unit {
+operation QAOALayer(gamma : Double, beta : Double) : Result[] {
     use q = Qubit[3];
-    Ry(theta, q[0]);
-    Ry(theta, q[1]);
-    Ry(theta, q[2]);
-    CNOT(q[0], q[1]);
-    CNOT(q[1], q[2]);
+    for i in 0..2 {
+        H(q[i]);
+    }
+    for i in 0..1 {
+        Rzz(2.0 * gamma, q[i], q[i + 1]);
+    }
+    for i in 0..2 {
+        Rx(2.0 * beta, q[i]);
+    }
+    mutable r = [];
+    for i in 0..2 {
+        set r += [M(q[i])];
+    }
     ResetAll(q);
+    return r;
 }

@@ -31,6 +31,9 @@ pennylane==0.44.0
 # ------------------------------------------------------------------------------
 # Microsoft Q# Environment
 # ------------------------------------------------------------------------------
-# Modern Q# tooling is installed separately via the Microsoft Q# SDK and
-# associated compiler/runtime components. It does not expose a standard
-# Python package __version__ attribute and is therefore not pinned here.
+# The Q# compiler, QIR generator and simulator are provided by the `qsharp`
+# Python package (used by functional_equivalence.py).
+qsharp==1.28.0
+sympy==1.14.0
+nbformat
+nbconvert
