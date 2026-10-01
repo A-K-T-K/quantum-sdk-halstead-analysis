@@ -8,7 +8,8 @@
 What is checked for every With_import/ program
 ----------------------------------------------
 1. The file itself is executed through its own SDK (Qiskit `QuantumCircuit.data`, Cirq
-   operations, the PennyLane tape, Q# compiled to QIR and executed once), so the test runs
+   operations, the PennyLane tape, Q# compiled to QIR and runtime-checked with 64 shots
+   for this corpus), so the test runs
    exactly the code that is tokenised -- no re-typed copies.
 2. The resulting gate-level program is simulated exactly (every measurement branch is
    followed, no sampling). Terminal measurements are deferred, so the pre-measurement state
@@ -17,13 +18,16 @@ What is checked for every With_import/ program
    algorithm's mathematical definition (closed-form amplitudes, the DFT matrix, the QAOA
    Hamiltonian exponentials, ...), never from the gate sequence of the implementation.
    Acceptance: fidelity >= 1 - 1e-8. Deutsch-Jozsa is checked on the input register,
-   teleportation per measurement branch on Bob's qubit, the QFT as an operator on random
-   input states.
-4. The set of measured qubits must equal the specification, ancilla qubits must be
-   returned to |0>, and every Q# program must run without a runtime error.
+   teleportation per measurement branch on Bob's qubit, and the three-qubit QFT
+   on all eight computational-basis inputs with a common global phase.
+4. Every branch must measure the specified qubits. Teleportation must have the four
+   resolved Alice outcomes, each with probability 1/4. Additional compiler ancillas
+   must return to |0>; the Deutsch-Jozsa working ancilla is traced out.
+   The finite-shot Q# runtime check must finish without a runtime error.
 
 Without_import/ files are not standalone programs; they are verified to be exactly the
-With_import/ file with its import / namespace preamble removed (tools/derive_without_import.py).
+With_import/ file with its import / namespace / entry-point preamble removed
+(tools/derive_without_import.py), ignoring outer blank lines and trailing whitespace.
 
 Results: data/functional_equivalence.csv (and data/functional_equivalence_audit_<rev>.csv)
 """
@@ -101,7 +105,7 @@ def check_without_import(base: Path):
             g = base / "Without_import" / bench / f.name
             text = f.read_text(encoding="utf-8")
             expect = strip_qsharp(text) if f.suffix == ".qs" else strip_python(text)
-            norm = lambda t: "\n".join(l.rstrip() for l in t.strip().splitlines() if l.strip())  # noqa: E731
+            norm = lambda t: "\n".join(l.rstrip() for l in t.strip().splitlines())  # noqa: E731
             ok = g.exists() and norm(g.read_text(encoding="utf-8")) == norm(expect)
             rows.append({"file": f"Without_import/{bench}/{f.name}", "matches_with_import_minus_preamble": ok})
     return pd.DataFrame(rows)
@@ -126,6 +130,12 @@ MUTANTS = [
     ("GHZ/qsharp_ghz.qs", "        ResetAll(q);\n", "", "Q# qubits released without reset (runtime error)"),
     ("bell/qiskit_bell.py", "qc.cx(qr[0], qr[1])", "qc.cx(qr[1], qr[0])", "control and target swapped"),
     ("bell/pennylane_bell.py", "return qml.probs(wires=[0, 1])", "return qml.state()", "no measurement"),
+    ("teleport/cirq_teleport.py", None,
+     "import cirq\nq = cirq.LineQubit.range(3)\ncircuit = cirq.Circuit(\n"
+     "    cirq.H(q[2]), cirq.T(q[2]),\n"
+     "    cirq.measure(q[0], key='m0'), cirq.measure(q[1], key='m1'),\n"
+     "    cirq.measure(q[2], key='m2'))\n",
+     "known state prepared directly on Bob without teleportation"),
 ]
 
 
@@ -135,10 +145,11 @@ def mutation_test():
         for k, (rel, a, b, desc) in enumerate(MUTANTS):
             src = ROOT / "With_import" / rel
             text = src.read_text(encoding="utf-8")
-            assert a in text, (rel, a)
+            if a is not None:
+                assert a in text, (rel, a)
             p = Path(tmp) / f"m{k}" / src.name
             p.parent.mkdir()
-            p.write_text(text.replace(a, b, 1), encoding="utf-8")
+            p.write_text(b if a is None else text.replace(a, b, 1), encoding="utf-8")
             r = verify_file(p, rel.split("/")[0], src.name.split("_")[0])
             caught = r["status"] not in ("pass", "pass-dist")
             rows.append({"mutated_file": rel, "fault": desc, "status": r["status"], "caught": caught,
@@ -174,15 +185,20 @@ def main():
     wi.to_csv(ROOT / "data" / "functional_equivalence_without_import.csv", index=False)
     print(f"\nWith_import: {(df.status == 'pass').sum()}/{len(df)} pass; "
           f"Without_import: {wi.matches_with_import_minus_preamble.sum()}/{len(wi)} match")
+    mutation_ok = True
     if a.mutation:
         mt = mutation_test()
         mt.to_csv(ROOT / "data" / "functional_equivalence_mutation_test.csv", index=False)
         print(f"Mutation test: {mt.caught.sum()}/{len(mt)} injected faults rejected")
+        mutation_ok = len(mt) == len(MUTANTS) and mt.caught.all()
     if a.audit:
         au = audit(a.audit)
         au.to_csv(ROOT / "data" / f"functional_equivalence_audit_{a.audit}.csv", index=False)
         print(f"Audit of {a.audit}: " + ", ".join(f"{k}={v}" for k, v in au.status.value_counts().items()))
-    ok = (df.status == "pass").all() and wi.matches_with_import_minus_preamble.all()
+    expected = {(bench, sdk) for bench in ORDER for sdk in ("cirq", "pennylane", "qiskit", "qsharp")}
+    complete = len(df) == len(expected) and set(zip(df.benchmark, df.sdk)) == expected
+    ok = (complete and len(wi) == len(expected) and (df.status == "pass").all()
+          and wi.matches_with_import_minus_preamble.all() and mutation_ok)
     sys.exit(0 if ok else 1)
 
 

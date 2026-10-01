@@ -212,9 +212,13 @@ def check(spec: Spec, program: sim.Program, seed=0):
     out["branches"] = len(branches)
     measured_q = sorted({q for b in branches for q in b.measured.values()})
     out["measured"] = " ".join(map(str, measured_q))
-    meas_ok = tuple(measured_q) == tuple(sorted(spec.measured))
+    expected_measured = set(spec.measured)
+    meas_ok = bool(branches) and all(set(b.measured.values()) == expected_measured for b in branches)
     if not meas_ok:
-        out["notes"].append(f"measured qubits {measured_q} != expected {list(spec.measured)}")
+        out["notes"].append(f"measurement scope differs from {list(spec.measured)} in at least one branch "
+                            f"(union: {measured_q})")
+
+    protocol_ok = True
 
     fid, leaked = np.nan, 0.0
     if spec.kind in ("state", "register", "operator"):
@@ -234,12 +238,15 @@ def check(spec: Spec, program: sim.Program, seed=0):
                 fid = sim.fidelity_pure(vec, spec.ref)
             elif spec.kind == "register":
                 fid = sim.register_fidelity(vec, n, list(spec.register), spec.ref)
-            else:  # operator: zero input already tested above; now random inputs
+            else:  # Complete computational basis for the small benchmark operator.
                 rng = np.random.default_rng(seed)
                 fids, phases = [], []
-                for _ in range(3):
-                    psi = rng.normal(size=2 ** n) + 1j * rng.normal(size=2 ** n)
-                    psi /= np.linalg.norm(psi)
+                if n <= 10:
+                    inputs = np.eye(2 ** n, dtype=complex).T
+                else:
+                    inputs = rng.normal(size=(3, 2 ** n)) + 1j * rng.normal(size=(3, 2 ** n))
+                    inputs /= np.linalg.norm(inputs, axis=1, keepdims=True)
+                for psi in inputs:
                     init = np.zeros((2,) * W, complex)
                     idx = tuple([slice(None)] * n + [0] * (W - n))
                     init[idx] = psi.reshape((2,) * n)
@@ -268,10 +275,25 @@ def check(spec: Spec, program: sim.Program, seed=0):
         fid = min(fids) if fids else 0.0
         if len(branches) != 4:
             out["notes"].append(f"expected 4 measurement branches, got {len(branches)}")
+            protocol_ok = False
+        outcomes = set()
+        for b in branches:
+            alice = {q: b.results[key] for key, q in b.measured.items()
+                     if q in (0, 1) and key in b.results}
+            if set(alice) != {0, 1}:
+                protocol_ok = False
+            else:
+                outcomes.add((alice[0], alice[1]))
+        if outcomes != {(0, 0), (0, 1), (1, 0), (1, 1)}:
+            out["notes"].append("Alice's four resolved measurement outcomes are required")
+            protocol_ok = False
+        if len(probs) != 4 or not np.allclose(probs, 0.25, rtol=0, atol=TOL):
+            out["notes"].append("teleportation branches must each have probability 1/4")
+            protocol_ok = False
 
     out["fidelity"] = fid
     out["leaked"] = leaked
-    ok = meas_ok and fid >= 1 - TOL and leaked <= TOL
+    ok = meas_ok and protocol_ok and fid >= 1 - TOL and leaked <= TOL
     if leaked > TOL:
         out["notes"].append(f"ancilla/leak probability {leaked:.2e}")
     if not (fid >= 1 - TOL):

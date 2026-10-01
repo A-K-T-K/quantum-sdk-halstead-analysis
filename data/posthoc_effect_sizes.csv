@@ -1,19 +1,19 @@
-Metric,Comparison,Test,Effect Size (r / d),Raw p,BH-corrected p,Significant (BH α=0.05)
-effort,Cirq vs PennyLane,Wilcoxon,0.8235,0.00213623046875,0.0042724609375,True
-effort,Cirq vs Q#,Wilcoxon,0.1618,0.596588134765625,0.596588134765625,False
-effort,Cirq vs Qiskit,Wilcoxon,0.4412,0.129730224609375,0.15567626953125,False
-effort,PennyLane vs Q#,Wilcoxon,0.9706,9.1552734375e-05,0.000274658203125,True
-effort,PennyLane vs Qiskit,Wilcoxon,1.0,3.0517578125e-05,0.00018310546875,True
-effort,Qiskit vs Q#,Wilcoxon,0.5147,0.07391357421875,0.110870361328125,False
-volume,Cirq vs PennyLane,Wilcoxon,1.0,3.0517578125e-05,6.103515625e-05,True
-volume,Cirq vs Q#,Wilcoxon,0.1618,0.596588134765625,0.596588134765625,False
-volume,Cirq vs Qiskit,Wilcoxon,0.6618,0.01824951171875,0.0218994140625,True
-volume,PennyLane vs Q#,Wilcoxon,1.0,3.0517578125e-05,6.103515625e-05,True
-volume,PennyLane vs Qiskit,Wilcoxon,1.0,3.0517578125e-05,6.103515625e-05,True
-volume,Qiskit vs Q#,Wilcoxon,0.9559,0.000152587890625,0.0002288818359375,True
-difficulty,Cirq vs PennyLane,Wilcoxon,0.1765,0.5618896484375,0.75860595703125,False
-difficulty,Cirq vs Q#,Wilcoxon,0.0,1.0,1.0,False
-difficulty,Cirq vs Qiskit,Wilcoxon,0.8824,0.0020896484202033616,0.004179296840406723,True
-difficulty,PennyLane vs Q#,Wilcoxon,0.1471,0.632171630859375,0.75860595703125,False
-difficulty,PennyLane vs Qiskit,Wilcoxon,0.8971,0.000579833984375,0.001739501953125,True
-difficulty,Qiskit vs Q#,Wilcoxon,0.9118,0.00042724609375,0.001739501953125,True
+Metric,Comparison,Test,W,Effect Size (r / d),Signed RBC,Raw p,BH-corrected p,Significant (BH α=0.05)
+effort,Cirq vs PennyLane,Circuit-blocked signed-rank,12.0,0.8235,0.8235294117647058,0.0390625,0.078125,False
+effort,Cirq vs Q#,Circuit-blocked signed-rank,57.0,0.1618,0.16176470588235295,0.71875,0.71875,False
+effort,Cirq vs Qiskit,Circuit-blocked signed-rank,38.0,0.4412,-0.4411764705882353,0.125,0.15,False
+effort,PennyLane vs Q#,Circuit-blocked signed-rank,2.0,0.9706,-0.9705882352941176,0.015625,0.046875,True
+effort,PennyLane vs Qiskit,Circuit-blocked signed-rank,0.0,1.0,-1.0,0.0078125,0.046875,True
+effort,Qiskit vs Q#,Circuit-blocked signed-rank,33.0,0.5147,0.5147058823529411,0.1171875,0.15,False
+volume,Cirq vs PennyLane,Circuit-blocked signed-rank,0.0,1.0,1.0,0.0078125,0.015625,True
+volume,Cirq vs Q#,Circuit-blocked signed-rank,57.0,0.1618,-0.16176470588235295,0.6796875,0.6796875,False
+volume,Cirq vs Qiskit,Circuit-blocked signed-rank,23.0,0.6618,0.6617647058823529,0.09375,0.11249999999999999,False
+volume,PennyLane vs Q#,Circuit-blocked signed-rank,0.0,1.0,-1.0,0.0078125,0.015625,True
+volume,PennyLane vs Qiskit,Circuit-blocked signed-rank,0.0,1.0,-1.0,0.0078125,0.015625,True
+volume,Qiskit vs Q#,Circuit-blocked signed-rank,3.0,0.9559,-0.9558823529411765,0.015625,0.0234375,True
+difficulty,Cirq vs PennyLane,Circuit-blocked signed-rank,56.0,0.1765,-0.17647058823529413,0.671875,0.8999999999999999,False
+difficulty,Cirq vs Q#,Circuit-blocked signed-rank,68.0,0.0,0.0,1.0,1.0,False
+difficulty,Cirq vs Qiskit,Circuit-blocked signed-rank,8.0,0.8824,-0.8823529411764706,0.0078125,0.015625,True
+difficulty,PennyLane vs Q#,Circuit-blocked signed-rank,58.0,0.1471,0.14705882352941177,0.75,0.8999999999999999,False
+difficulty,PennyLane vs Qiskit,Circuit-blocked signed-rank,7.0,0.8971,-0.8970588235294118,0.0078125,0.015625,True
+difficulty,Qiskit vs Q#,Circuit-blocked signed-rank,6.0,0.9118,0.9117647058823529,0.0078125,0.015625,True

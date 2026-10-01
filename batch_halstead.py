@@ -5,6 +5,7 @@ import json
 import csv
 import sys
 from collections import Counter
+from pathlib import Path
 
 
 # ==============================
@@ -13,12 +14,10 @@ from collections import Counter
 
 ROOT_DIRS = ["With_import", "Without_import"]
 EXPECTED_FILE_COUNT = 32
-OUTPUT_FILE = "halstead_results.csv"
+OUTPUT_FILE = os.path.join("data", "halstead_results.csv")
 
-print("Loading operator_set.json...")
-with open("operator_set.json") as f:
+with Path(__file__).resolve().with_name("operator_set.json").open(encoding="utf-8") as f:
     OPERATOR_SET = set(json.load(f)["operators"])
-print("Operator set loaded.\n")
 
 
 # ==============================
@@ -156,114 +155,120 @@ def halstead(source):
 # PROCESS FILES
 # ==============================
 
-rows = []
-total_files = 0
-processed_files = 0
-failed_files = 0
+def main():
+    rows = []
+    total_files = 0
+    processed_files = 0
+    failed_files = 0
 
-print("Scanning corpus...\n")
+    print("Scanning corpus...\n")
 
-for ROOT_DIR in ROOT_DIRS:
-    if not os.path.exists(ROOT_DIR):
-        print(f"ERROR: {ROOT_DIR} not found.")
+    for ROOT_DIR in ROOT_DIRS:
+        if not os.path.exists(ROOT_DIR):
+            print(f"ERROR: {ROOT_DIR} not found.")
+            sys.exit(1)
+
+        for root, dirs, files in os.walk(ROOT_DIR):
+
+            # Exclude common non-source traversal targets
+            dirs[:] = [d for d in dirs if d not in {"venv", "__pycache__", ".git"}]
+
+            for file in files:
+                if file.endswith(".py") or file.endswith(".qs"):
+
+                    total_files += 1
+                    path = os.path.join(root, file)
+
+                    print(f"[DETECTED] {path}")
+
+                    dataset = ROOT_DIR
+                    circuit = os.path.basename(os.path.dirname(path))
+                    sdk = os.path.splitext(file)[0]
+
+                    try:
+                        with open(path, "r", encoding="utf-8") as f:
+                            source = f.read()
+
+                        n1, n2, N1, N2, eta, N, V, D, E = halstead(source)
+
+                        rows.append([
+                            dataset,
+                            circuit,
+                            sdk,
+                            n1, n2, N1, N2,
+                            eta, N, V, D, E
+                        ])
+
+                        processed_files += 1
+                        print(f"[COMPLETED] {path} | Effort={round(E, 2)}")
+
+                    except Exception as e:
+                        failed_files += 1
+                        print(f"[FAILED] {path}")
+                        print("Error:", e)
+                        print("-" * 60)
+
+
+    # ==============================
+    # VALIDATION CHECK
+    # ==============================
+
+    dataset_counts = Counter(row[0] for row in rows)
+
+    print("\nDataset breakdown:")
+    for k, v in dataset_counts.items():
+        print(f"{k}: {v} files")
+
+    if dataset_counts["With_import"] != 32:
+        print("ERROR: With_import does not contain 32 files.")
         sys.exit(1)
 
-    for root, dirs, files in os.walk(ROOT_DIR):
+    if dataset_counts["Without_import"] != 32:
+        print("ERROR: Without_import does not contain 32 files.")
+        sys.exit(1)
 
-        # Exclude common non-source traversal targets
-        dirs[:] = [d for d in dirs if d not in {"venv", "__pycache__", ".git"}]
-
-        for file in files:
-            if file.endswith(".py") or file.endswith(".qs"):
-
-                total_files += 1
-                path = os.path.join(root, file)
-
-                print(f"[DETECTED] {path}")
-
-                dataset = ROOT_DIR
-                circuit = os.path.basename(os.path.dirname(path))
-                sdk = os.path.splitext(file)[0]
-
-                try:
-                    with open(path, "r", encoding="utf-8") as f:
-                        source = f.read()
-
-                    n1, n2, N1, N2, eta, N, V, D, E = halstead(source)
-
-                    rows.append([
-                        dataset,
-                        circuit,
-                        sdk,
-                        n1, n2, N1, N2,
-                        eta, N, V, D, E
-                    ])
-
-                    processed_files += 1
-                    print(f"[COMPLETED] {path} | Effort={round(E, 2)}")
-
-                except Exception as e:
-                    failed_files += 1
-                    print(f"[FAILED] {path}")
-                    print("Error:", e)
-                    print("-" * 60)
+    if failed_files > 0:
+        print("ERROR: Some files failed during processing.")
+        sys.exit(1)
 
 
-# ==============================
-# VALIDATION CHECK
-# ==============================
+    # ==============================
+    # WRITE CSV
+    # ==============================
+    # The csv module writes the header row followed by one row per processed file. [web:36]
 
-dataset_counts = Counter(row[0] for row in rows)
+    print("\nWriting CSV...")
 
-print("\nDataset breakdown:")
-for k, v in dataset_counts.items():
-    print(f"{k}: {v} files")
-
-if dataset_counts["With_import"] != 32:
-    print("ERROR: With_import does not contain 32 files.")
-    sys.exit(1)
-
-if dataset_counts["Without_import"] != 32:
-    print("ERROR: Without_import does not contain 32 files.")
-    sys.exit(1)
-
-if failed_files > 0:
-    print("ERROR: Some files failed during processing.")
-    sys.exit(1)
-
-
-# ==============================
-# WRITE CSV
-# ==============================
-# The csv module writes the header row followed by one row per processed file. [web:36]
-
-print("\nWriting CSV...")
-
-with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as f:
-    writer = csv.writer(f)
-    writer.writerow([
-        "dataset",
-        "circuit",
-        "sdk",
-        "n1", "n2", "N1", "N2",
-        "vocabulary",
-        "length",
-        "volume",
-        "difficulty",
-        "effort"
-    ])
-    writer.writerows(rows)
+    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+    with open(OUTPUT_FILE, "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "dataset",
+            "circuit",
+            "sdk",
+            "n1", "n2", "N1", "N2",
+            "vocabulary",
+            "length",
+            "volume",
+            "difficulty",
+            "effort"
+        ])
+        writer.writerows(rows)
 
 
-# ==============================
-# SUMMARY
-# ==============================
+    # ==============================
+    # SUMMARY
+    # ==============================
 
-print("\n==============================")
-print("PROCESS COMPLETE")
-print("==============================")
-print(f"Total detected files : {total_files}")
-print(f"Successfully processed: {processed_files}")
-print(f"Failed files         : {failed_files}")
-print(f"Output file          : {OUTPUT_FILE}")
-print("==============================")
+    print("\n==============================")
+    print("PROCESS COMPLETE")
+    print("==============================")
+    print(f"Total detected files : {total_files}")
+    print(f"Successfully processed: {processed_files}")
+    print(f"Failed files         : {failed_files}")
+    print(f"Output file          : {OUTPUT_FILE}")
+    print("==============================")
+
+
+if __name__ == "__main__":
+    main()

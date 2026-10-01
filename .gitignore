@@ -1,3 +1,35 @@
+# Python / Jupyter caches
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+# Local environments and toolchains
+.audit-venv/
+.venv/
+venv/
+
+# Local review and audit workspace; only the token audit and the
+# verification regression tests are part of the replication package
+/audit/*
+!/audit/token_audit.py
+!/audit/token_classification.csv
+!/audit/omitted_characters.csv
+!/audit/test_verification.py
+/requirements-review.txt
+
+# Manuscript sources, build helpers, and LaTeX output
+/manusript.tex
+/manusript.pdf
+/ref.bib
+/tools/build_bibliography.py
+/tools/build_manuscript.py
+/tools/update_manuscript_results.py
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.xdv
+*.fls
+*.fdb_latexmk

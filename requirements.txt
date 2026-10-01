@@ -35,5 +35,7 @@ pennylane==0.44.0
 # Python package (used by functional_equivalence.py).
 qsharp==1.28.0
 sympy==1.14.0
-nbformat
-nbconvert
+nbformat==5.11.1
+nbconvert==7.17.1
+ipython==9.11.0
+gast==0.7.0

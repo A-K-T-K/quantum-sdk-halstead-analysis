@@ -3,13 +3,14 @@ Grover/qiskit_grover.py,Grover diffuser wrapped in H on the target (the defect o
 Grover/cirq_grover.py,Grover diffuser uses CCX instead of CCZ,FAIL,True,fidelity 0.140625 < 1
 qaoa/cirq_qaoa.py,QAOA without the |+> initial layer,FAIL,True,fidelity 0.125000 < 1
 qaoa/qsharp_qaoa.qs,QAOA cost angle convention error,FAIL,True,fidelity 0.933472 < 1
-teleport/cirq_teleport.py,teleportation without Z correction,FAIL,True,"expected 4 measurement branches, got 2; fidelity 0.500000 < 1"
+teleport/cirq_teleport.py,teleportation without Z correction,FAIL,True,"expected 4 measurement branches, got 2; Alice's four resolved measurement outcomes are required; teleportation branches must each have probability 1/4; fidelity 0.500000 < 1"
 teleport/qsharp_teleport.qs,teleportation with the wrong Pauli correction,FAIL,True,fidelity 0.000000 < 1
-teleport/pennylane_teleport.py,correction conditioned on the wrong measurement,FAIL,True,"expected 4 measurement branches, got 2; fidelity 0.750000 < 1"
+teleport/pennylane_teleport.py,correction conditioned on the wrong measurement,FAIL,True,"expected 4 measurement branches, got 2; Alice's four resolved measurement outcomes are required; teleportation branches must each have probability 1/4; fidelity 0.750000 < 1"
 QFT/qiskit_qft.py,QFT with a wrong rotation angle,FAIL,True,input-dependent phase: not equal to DFT up to a global phase; fidelity 0.000000 < 1
 QFT/pennylane_qft.py,missing import (program does not run),ERROR,True,NameError: name 'np' is not defined
 P_ansatz/pennylane_ansatz.py,ansatz with a wrong rotation axis,FAIL,True,fidelity 0.956334 < 1
-DJ/cirq_dj.py,ancilla measured as well (scope differs from specification),FAIL,True,"measured qubits [0, 1, 2] != expected [0, 1]"
+DJ/cirq_dj.py,ancilla measured as well (scope differs from specification),FAIL,True,"measurement scope differs from [0, 1] in at least one branch (union: [0, 1, 2])"
 GHZ/qsharp_ghz.qs,Q# qubits released without reset (runtime error),ERROR,True,QSharpError: Error: Qubit0 released while not in |0⟩ state Call stack:
 bell/qiskit_bell.py,control and target swapped,FAIL,True,fidelity 0.250000 < 1
-bell/pennylane_bell.py,no measurement,FAIL,True,"measured qubits [] != expected [0, 1]"
+bell/pennylane_bell.py,no measurement,FAIL,True,"measurement scope differs from [0, 1] in at least one branch (union: [])"
+teleport/cirq_teleport.py,known state prepared directly on Bob without teleportation,FAIL,True,"expected 4 measurement branches, got 1; Alice's four resolved measurement outcomes are required; teleportation branches must each have probability 1/4"
